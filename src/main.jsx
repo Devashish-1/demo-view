@@ -538,6 +538,10 @@ function App() {
   useEffect(() => {
     if (!user) return;
     const events = new EventSource('/api/events');
+    events.addEventListener('polling', () => {
+      events.close();
+      setConnected(true);
+    });
     events.addEventListener('refresh', refresh);
     events.addEventListener('ready', () => setConnected(true));
     events.addEventListener('error', () => setConnected(false));
@@ -558,7 +562,9 @@ function App() {
       }
     };
     const timer = setInterval(() => {
-      api('/presence', { method: 'POST' }).catch(() => {});
+      api('/presence', { method: 'POST' })
+        .then(() => setConnected(true))
+        .catch(() => setConnected(false));
       refresh();
       checkReminders();
     }, 60000);

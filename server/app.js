@@ -273,7 +273,8 @@ export function createApp(db) {
   });
   app.get('/api/events', (req, res) => {
     // Serverless instances use the client's periodic refresh instead of a long-lived stream.
-    if (process.env.VERCEL) return res.status(204).end();
+    if (process.env.VERCEL)
+      return res.type('text/event-stream').send('event: polling\ndata: {}\n\n');
     res.set({ 'Content-Type': 'text/event-stream', Connection: 'keep-alive' });
     res.flushHeaders();
     res.write('event: ready\ndata: {}\n\n');
