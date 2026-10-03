@@ -4,7 +4,8 @@ import { createApp } from '../server/app.js';
 
 let ready;
 async function initialize() {
-  if (!process.env.DATABASE_URL) throw new Error('Connect PostgreSQL and set DATABASE_URL before deploying.');
+  if (!process.env.DATABASE_URL)
+    throw new Error('Connect PostgreSQL and set DATABASE_URL before deploying.');
   const db = await createDatabase();
   await seedDatabase(db);
   return createApp(db);
@@ -12,11 +13,16 @@ async function initialize() {
 
 export default async function handler(req, res) {
   try {
-    ready ??= initialize().catch((error) => { ready = undefined; throw error; });
+    ready ??= initialize().catch((error) => {
+      ready = undefined;
+      throw error;
+    });
     const app = await ready;
     return app(req, res);
   } catch (error) {
     console.error('CRM initialization failed:', error.message);
-    res.status(503).json({ error: 'Database setup is not complete. Please contact the administrator.' });
+    res
+      .status(503)
+      .json({ error: 'Database setup is not complete. Please contact the administrator.' });
   }
 }

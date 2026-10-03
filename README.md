@@ -27,10 +27,10 @@ Open **http://127.0.0.1:5173**. The Vite development server proxies API requests
 
 ### Local demo accounts
 
-| Role          | Email                                        | Password    |
-| ------------- | -------------------------------------------- | ----------- |
-| Administrator | `admin@gmail.com`                            | `Admin@123` |
-| Agent / Priya | `user1@gmail.com`                            | `user1@123` |
+| Role          | Email                                        | Password                         |
+| ------------- | -------------------------------------------- | -------------------------------- |
+| Administrator | `admin@gmail.com`                            | `Admin@123`                      |
+| Agent / Priya | `user1@gmail.com`                            | `user1@123`                      |
 | Other agents  | `user2@gmail.com` through `user10@gmail.com` | `user2@123` through `user10@123` |
 
 An empty development database is seeded with 72 synthetic leads, 10 agents, and sample activity. Browser verification may add clearly marked demo records. Seed data is inserted **only once**; restarts retain your changes. These are demo contact details; the app never calls or messages them.
@@ -148,3 +148,11 @@ docs/api.md              API reference
 - Live refresh is immediate within one API process and reconciled every minute across processes. A larger multi-instance installation can add a shared event bus and shared rate-limit storage.
 
 Parser installation follows the official [SheetJS Node.js distribution instructions](https://docs.sheetjs.com/docs/getting-started/installation/nodejs/).
+
+### Vercel deployment
+
+Import this repository into Vercel using the Vite preset. `vercel.json` serves the built frontend and routes `/api/*` to the Express function. Connect a PostgreSQL database through Vercel Storage and provide `DATABASE_URL` to Production and Preview, then redeploy.
+
+For the requested dummy-account demonstration, set `DEMO_MODE=true`. This seeds `admin@gmail.com` / `Admin@123` and `user1@gmail.com` / `user1@123` through `user10@gmail.com` / `user10@123` on the first database startup. For a real workspace, remove demo mode and supply a unique `SEED_ADMIN_PASSWORD` of at least 12 characters with `SEED_DEMO=false`. Seed routines never overwrite existing accounts. `node scripts/update-demo-logins.js` migrates only the original local demo emails once.
+
+Vercel deployments use the existing one-minute refresh and callback reminders instead of persistent server-sent event connections. Their origin allowlist includes Vercel's deployment and production domains; set `APP_URL` for a custom domain. Uploaded files are parsed in memory, while leads, sessions, imports and audit history persist in PostgreSQL. Vercel's request body limit applies to uploads.
