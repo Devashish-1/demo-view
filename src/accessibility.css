@@ -1,0 +1,373 @@
+/* Keep the quiet visual palette while maintaining legible text at every breakpoint. */
+.page-heading p,
+.card-heading p,
+.metric-note,
+.form-note,
+.page-footer,
+.secure-note,
+.field > small,
+.cell-sub {
+  color: #727f72;
+}
+.eyebrow,
+.nav-group > span,
+.workspace-switch small,
+.profile small,
+.breadcrumb,
+.subtle-tag,
+.list-tabs button,
+.filter-label,
+.filters > span,
+.pagination {
+  color: #73816f;
+}
+.nav-link {
+  color: #68766b;
+}
+.nav-link.active {
+  color: #244e36;
+}
+.help-card p {
+  color: #788267;
+}
+.help-card > span {
+  color: #61784b;
+}
+.overview-banner p,
+.overview-banner p b {
+  color: #788366;
+}
+.overview-banner button {
+  color: #5d7648;
+}
+.metric-top {
+  color: #68776c;
+}
+.metric-pill {
+  color: #597a4c;
+}
+.metric-pill.blue {
+  color: #577f92;
+}
+.metric-pill.amber {
+  color: #917544;
+}
+.metric-pill.purple {
+  color: #876298;
+}
+th {
+  color: #73816f;
+}
+td {
+  color: #5f725f;
+}
+.person-cell strong,
+.business-cell strong {
+  color: #425c41;
+}
+.person-cell > span > small,
+.business-cell small,
+.location-cell,
+.phone-cell,
+.category-tag,
+.owner-cell,
+.unassigned,
+.rank {
+  color: #75866b;
+}
+.status {
+  color: #66715e;
+}
+.status.green {
+  color: #4c7c43;
+}
+.status.blue {
+  color: #4e7e9c;
+}
+.status.amber {
+  color: #91703b;
+}
+.status.red {
+  color: #a26754;
+}
+.status.purple {
+  color: #84618f;
+}
+.pipeline-total span,
+.pipeline-list button,
+.pipeline-list small,
+.chart-legend,
+.chart-y,
+.chart-column small,
+.rate-cell,
+.won-count {
+  color: #78856d;
+}
+.pipeline-list strong {
+  color: #45613b;
+}
+.callback-list strong {
+  color: #547046;
+}
+.callback-list button > div > span,
+.card-footer-link {
+  color: #788a66;
+}
+.category-stat > div > span,
+.category-stat small {
+  color: #7e8e6e;
+}
+.category-stat strong {
+  color: #536e41;
+}
+.categories-strip .eyebrow {
+  color: #889475;
+}
+.list-tabs button.active {
+  color: #3e683c;
+}
+.list-tabs span,
+.selection-bar,
+.category-tag,
+.subtle-tag {
+  color: #718660;
+}
+.input-search {
+  color: #8a987d;
+}
+.filters select,
+.filters input {
+  color: #61754e;
+}
+.form-note,
+.info-box p,
+.duplicate-warning small {
+  color: #7a8968;
+}
+.workspace-intro h2,
+.dropzone h2,
+.import-result h2,
+.coming-soon h1,
+.profile-card h2,
+.modal > header h2 {
+  color: #3f5c34;
+}
+.workspace-intro p,
+.workspace-intro .eyebrow,
+.queue-illustration span,
+.dropzone p,
+.dropzone small,
+.import-benefits p,
+.import-result > p {
+  color: #7b8b67;
+}
+.import-benefits strong,
+.policy-section h3,
+.policy-options strong,
+.field > span {
+  color: #596f45;
+}
+.policy-options small,
+.policy-section .form-note {
+  color: #7f8f6b;
+}
+.field input,
+.field select,
+.field textarea {
+  color: #405835;
+}
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #8e9b7d;
+}
+.import-steps strong {
+  color: #839173;
+}
+.import-steps > div.current strong {
+  color: #4a6b36;
+}
+.result-stats span {
+  color: #6c854d;
+}
+.result-stats .blue span {
+  color: #5b8495;
+}
+.result-stats .amber span {
+  color: #8e753e;
+}
+.result-stats .red span {
+  color: #996b4e;
+}
+.file-cell,
+.role-tag,
+.audit-action {
+  color: #718958;
+}
+.team-summary span,
+.profile-card > p,
+.profile-fact p {
+  color: #7f8d6b;
+}
+.breakdown-list strong,
+.contact-panel h3,
+.section-title,
+.log-panel > h3 {
+  color: #587242;
+}
+.breakdown-list span,
+.contact-panel p,
+.detail-facts small,
+.detail-facts strong,
+.timeline-item p,
+.timeline-item small,
+.timeline-heading time {
+  color: #7c8e65;
+}
+.phone-reveal > div > span,
+.phone-reveal strong {
+  color: #638147;
+}
+.modal > header p,
+.log-panel > p,
+.locked-form p,
+.locked-form h4,
+.coming-mini strong,
+.coming-mini span {
+  color: #7e9066;
+}
+.calendar-week,
+.calendar-days button,
+.calendar-legend,
+.calendar-legend > span,
+.agenda-list button > span:not(.agenda-time),
+.agenda-list small {
+  color: #7a8f60;
+}
+.calendar-days .outside {
+  color: #b3bea3;
+}
+.calendar-days small {
+  color: #6e8a4e;
+}
+.agenda-list strong {
+  color: #53703b;
+}
+.agenda-time {
+  color: #7a945b;
+}
+.audit-banner strong {
+  color: #657b45;
+}
+.audit-banner p,
+code {
+  color: #7b8c63;
+}
+.coming-soon > p,
+.coming-features p,
+.coming-footnote {
+  color: #7c8b68;
+}
+.coming-features h3 {
+  color: #5b7143;
+}
+.coming-label,
+.coming-features span {
+  color: #788b53;
+}
+.login-form h2 {
+  color: #344d36;
+}
+.login-form > p,
+.login-security,
+.login-form .login-help {
+  color: #78896c;
+}
+.login-form .field > span {
+  color: #5c7250;
+}
+.login-form input {
+  color: #355030;
+}
+.login-form input::placeholder {
+  color: #8f9c82;
+}
+.notification-item strong {
+  color: #637e49;
+}
+.notification-item small {
+  color: #84976d;
+}
+.empty h3 {
+  color: #6f865c;
+}
+.empty p {
+  color: #859677;
+}
+@media (min-width: 1100px) {
+  .nav-link {
+    font-size: 12px;
+  }
+  .page-heading p {
+    font-size: 12px;
+  }
+  .card-heading p {
+    font-size: 11px;
+  }
+  table {
+    font-size: 12px;
+  }
+  th {
+    font-size: 10px;
+  }
+  .lead-table td {
+    font-size: 11px;
+  }
+  .lead-table th {
+    font-size: 10px;
+  }
+  .business-cell strong,
+  .person-cell strong,
+  .callback-list strong {
+    font-size: 11px;
+  }
+  .status {
+    font-size: 10px;
+  }
+  .business-cell small,
+  .category-tag,
+  .location-cell,
+  .owner-cell {
+    font-size: 10px;
+  }
+  .metric-note,
+  .metric-pill {
+    font-size: 9px;
+  }
+  .pipeline-list button {
+    font-size: 10px;
+  }
+  .chart-legend,
+  .chart-y {
+    font-size: 9px;
+  }
+  .field > span {
+    font-size: 12px;
+  }
+  .field > small {
+    font-size: 10px;
+  }
+}
+
+.quick-times {
+  display: flex;
+  gap: 8px;
+  margin: -7px 0 18px;
+}
+.quick-times button {
+  background: #edf4e5;
+  border: 1px solid #d9e6ca;
+  color: #5f7d46;
+  border-radius: 5px;
+  padding: 6px 9px;
+  font-size: 10px;
+}

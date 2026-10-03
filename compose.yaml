@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: relay
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: relay
+    volumes:
+      - relay-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U relay -d relay']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+  app:
+    build: .
+    ports:
+      - '127.0.0.1:4000:4000'
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 4000
+      DATABASE_URL: postgresql://relay:${POSTGRES_PASSWORD}@postgres:5432/relay
+      SEED_DEMO: 'false'
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@relay.local}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?Set SEED_ADMIN_PASSWORD in .env}
+      APP_URL: ${APP_URL:?Set your public HTTPS APP_URL in .env}
+      TRUST_PROXY: ${TRUST_PROXY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  relay-postgres:
