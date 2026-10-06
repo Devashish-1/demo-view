@@ -2,12 +2,17 @@ import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import pg from 'pg';
+import { migratePlatform, scopedSQL } from './platform/schema.js';
 
 // One SQL schema and query interface for the local SQLite and PostgreSQL deployments.
 export async function createDatabase(options = {}) {
+  const namespace = options.namespace ?? '';
+  if (namespace && !/^org_[a-f0-9]{32}$/.test(namespace))
+    throw new Error('Invalid database namespace');
+  const scope = (sql) => scopedSQL(sql, namespace);
   const url = options.url ?? process.env.DATABASE_URL;
   let sqlite, pool;
-  if (url) pool = new pg.Pool({ connectionString: url, max: 10 });
+  if (url) pool = new pg.Pool({ connectionString: url, max: 4 });
   else {
     const path = options.path ?? process.env.SQLITE_PATH ?? 'data/relay.db';
     if (path !== ':memory:') mkdirSync(dirname(resolve(path)), { recursive: true });
@@ -15,6 +20,7 @@ export async function createDatabase(options = {}) {
     sqlite.exec('PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=10000;');
   }
   const query = async (sql, args = [], client = pool) => {
+    sql = scope(sql);
     if (sqlite) {
       const statement = sqlite.prepare(sql);
       return /^(SELECT|WITH|PRAGMA)/i.test(sql.trim())
@@ -30,6 +36,7 @@ export async function createDatabase(options = {}) {
   };
   let tail = Promise.resolve();
   const db = {
+    namespace,
     kind: sqlite ? 'sqlite' : 'postgresql',
     all: (sql, args) => query(sql, args),
     get: async (sql, args) => (await query(sql, args))[0],
@@ -121,9 +128,11 @@ export async function createDatabase(options = {}) {
     CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY,value TEXT NOT NULL);
   `;
   if (sqlite) {
-    sqlite.exec(schema);
+    sqlite.exec(scope(schema));
     sqlite.exec(
-      "CREATE TRIGGER IF NOT EXISTS audit_no_update BEFORE UPDATE ON audit BEGIN SELECT RAISE(ABORT, 'Audit entries are immutable'); END; CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit BEGIN SELECT RAISE(ABORT, 'Audit entries are immutable'); END;",
+      scope(
+        "CREATE TRIGGER IF NOT EXISTS audit_no_update BEFORE UPDATE ON audit BEGIN SELECT RAISE(ABORT, 'Audit entries are immutable'); END; CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit BEGIN SELECT RAISE(ABORT, 'Audit entries are immutable'); END;",
+      ),
     );
   } else {
     await db.tx(async (tx) => {
@@ -133,5 +142,6 @@ export async function createDatabase(options = {}) {
       CREATE TRIGGER audit_immutable BEFORE UPDATE OR DELETE ON audit FOR EACH ROW EXECUTE FUNCTION prevent_audit_mutation();`);
     });
   }
+  await migratePlatform(db);
   return db;
 }

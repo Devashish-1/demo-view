@@ -9,6 +9,7 @@ import { resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
+import { platformRouter } from './platform/routes.js';
 import {
   cleanLead,
   normalizePhone,
@@ -33,7 +34,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024, files: 1, fields: 5 },
 });
 
-export function createApp(db) {
+export function createApp(db, options = {}) {
   const app = express();
   const streams = new Set();
   const changed = () => {
@@ -60,6 +61,16 @@ export function createApp(db) {
   );
   app.use(express.json({ limit: '1mb' }));
   app.use(cookieParser());
+  if (options.scheduleJobs)
+    app.use('/api/platform', (req, res, next) => {
+      const respond = res.json;
+      res.json = function (body) {
+        if (req.user && res.statusCode < 400 && !['GET', 'HEAD', 'OPTIONS'].includes(req.method))
+          options.scheduleJobs();
+        return respond.call(this, body);
+      };
+      next();
+    });
   app.use('/api', (_req, res, next) => {
     res.set('Cache-Control', 'no-store');
     next();
@@ -118,6 +129,7 @@ export function createApp(db) {
         new Date(Date.now() + 12 * 3600000).toISOString(),
       ]);
       await tx.run('UPDATE users SET last_seen=? WHERE id=?', [now(), user.id]);
+      await audit(tx, { ...req, user }, 'login');
     });
     res.cookie('relay_session', token, {
       httpOnly: true,
@@ -126,6 +138,8 @@ export function createApp(db) {
       maxAge: 12 * 3600000,
       path: '/',
     });
+    if (options.onSession)
+      await options.onSession(hash(token), new Date(Date.now() + 12 * 3600000).toISOString());
     res.json({ user: publicUser(user), csrf });
   });
   app.use('/api', apiLimiter, async (req, res, next) => {
@@ -244,7 +258,10 @@ export function createApp(db) {
   }
   app.get('/api/auth/me', (req, res) => res.json({ user: req.user, csrf: req.session.csrf }));
   app.post('/api/auth/logout', async (req, res) => {
-    await db.tx((tx) => tx.run('DELETE FROM sessions WHERE token=?', [req.session.token]));
+    await db.tx(async (tx) => {
+      await tx.run('DELETE FROM sessions WHERE token=?', [req.session.token]);
+      await audit(tx, req, 'logout');
+    });
     res.clearCookie('relay_session', { path: '/' });
     res.json({ ok: true });
   });
@@ -1066,6 +1083,7 @@ export function createApp(db) {
         .send(XLSX.write(book, { type: 'buffer', bookType: 'xlsx' }));
     }
   });
+  app.use('/api/platform', platformRouter(db, options));
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Endpoint not found.' }));
   const dist = resolve('dist');
   if (existsSync(dist)) {

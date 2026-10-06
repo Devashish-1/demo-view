@@ -1,8 +1,14 @@
 # Relay CRM
 
-A complete local lead-management and telecaller workflow application, built from the supplied **Lead Management & Calling CRM — PRD & System Design**.
+A lead-management CRM with a connected Relay workspace for companies, contacts, deals, tasks and recovery cases. Built from the supplied lead CRM specification and expanded with the Relay platform brief.
 
 **Scope update:** Browser calling, Twilio, automatic SMS, and inbound call pop-ups are future scope. The application shows a **Coming soon** page for these features. There is no telephony SDK, dialing endpoint, SMS sender, or telephony credential requirement. Agents call externally and record outcomes in Relay.
+
+## Relay workspace additions
+
+Open **CRM & boards** for dynamic boards, typed custom fields and safe formulas; linked records and lead conversion; table/Kanban/month-calendar/timeline views; comments and notifications; recovery payment tracking; automation jobs; organization isolation; saved views, mapped CSV/JSON imports and CSV exports. AI and live calling stay **Coming soon**.
+
+See the [workspace and administrator guide](docs/platform-guide.md), [platform API](docs/platform-api.md), and [hosting estimate for 10–25 users](docs/hosting-costs.md). The guide distinguishes implemented core features from the remaining enterprise requirements.
 
 ## Start here
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, createContext, useContext, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import { callbackPreset } from './time.js';
+import Platform from './platform/Platform.jsx';
 import {
   ArrowUpRight,
   ArrowDownToLine,
@@ -336,6 +337,7 @@ function PageHeading({ eyebrow, title, description, children }) {
 }
 
 function Login({ onLogin }) {
+  const [organization, setOrganization] = useState('');
   const [email, setEmail] = useState('admin@gmail.com'),
     [password, setPassword] = useState(''),
     [busy, setBusy] = useState(false),
@@ -345,7 +347,10 @@ function Login({ onLogin }) {
     setBusy(true);
     setError('');
     try {
-      const result = await api('/auth/login', { method: 'POST', body: { email, password } });
+      const result = await api('/auth/login', {
+        method: 'POST',
+        body: { email, password, organization },
+      });
       csrf = result.csrf;
       onLogin(result.user);
     } catch (e) {
@@ -403,6 +408,14 @@ function Login({ onLogin }) {
           </h2>
           <p>Sign in to your workspace to get started.</p>
           <form onSubmit={submit}>
+            <Field label="Organization code" hint="Leave blank for the existing Relay workspace.">
+              <input
+                value={organization}
+                onChange={(e) => setOrganization(e.target.value)}
+                placeholder="default"
+                autoComplete="organization"
+              />
+            </Field>
             <Field label="Email address">
               <input
                 type="email"
@@ -443,6 +456,7 @@ const navigation = [
     group: 'WORKSPACE',
     items: [
       ['dashboard', 'Overview', LayoutDashboard],
+      ['platform', 'CRM & boards', BriefcaseBusiness],
       ['leads', 'All leads', Layers3],
       ['workspace', 'My workspace', Headphones],
       ['callbacks', 'Callbacks', CalendarDays],
@@ -738,7 +752,9 @@ function App() {
                 </button>
               </div>
             )}
-            {page === 'dashboard' ? (
+            {page === 'platform' ? (
+              <Platform api={api} user={user} notify={notify} />
+            ) : page === 'dashboard' ? (
               <Dashboard />
             ) : page === 'leads' ? (
               <Leads />
@@ -1679,7 +1695,7 @@ function LeadForm({ onClose, existing }) {
   );
 }
 function LeadDetail({ id, onClose }) {
-  const { meta, manager, notify, refresh, editLead } = useApp();
+  const { meta, manager, notify, refresh, editLead, navigate } = useApp();
   const { data, error, loading } = useLoad('/leads/' + id);
   const [busy, setBusy] = useState(false),
     [actionError, setActionError] = useState(''),
@@ -1746,6 +1762,27 @@ function LeadDetail({ id, onClose }) {
           <div className="detail-main">
             <div className="detail-status">
               <Status value={lead.status} />
+              {manager && (
+                <button
+                  className="text-button"
+                  disabled={busy}
+                  onClick={async () => {
+                    setBusy(true);
+                    try {
+                      await api(`/platform/leads/${id}/convert`, { method: 'POST' });
+                      notify('Company, contact and deal are linked in CRM & boards.');
+                      onClose();
+                      navigate('platform');
+                    } catch (e) {
+                      setActionError(e.message);
+                    } finally {
+                      setBusy(false);
+                    }
+                  }}
+                >
+                  Convert to CRM
+                </button>
+              )}
               {manager && !data.active && (
                 <button className="text-button" onClick={() => editLead(lead)}>
                   <Pencil size={14} />

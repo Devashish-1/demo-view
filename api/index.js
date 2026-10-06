@@ -1,6 +1,7 @@
+import { waitUntil } from '@vercel/functions';
 import { createDatabase } from '../server/db.js';
 import { seedDatabase } from '../server/seed.js';
-import { createApp } from '../server/app.js';
+import { createOrganizationHost } from '../server/platform/organizations.js';
 
 let ready;
 async function initialize() {
@@ -8,7 +9,7 @@ async function initialize() {
     throw new Error('Connect PostgreSQL and set DATABASE_URL before deploying.');
   const db = await createDatabase();
   await seedDatabase(db);
-  return createApp(db);
+  return createOrganizationHost(db, { defer: waitUntil });
 }
 
 export default async function handler(req, res) {
