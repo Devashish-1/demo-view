@@ -52,3 +52,10 @@ This release implements the core platform from the supplied 75-section brief; it
 - Search is scoped name matching, not full-text indexing of notes/files. Board exports are limited to 200 filtered records; no silent truncation is presented as a full export.
 - Subscription billing, a separate platform-admin console, retention/deletion policies and enterprise performance/compliance certification remain work items. No certified enterprise or million-record claim is made.
 - Namespace caches currently have no eviction, transactions serialize writes, and per-organization pools are bounded at four connections. Load-test and revise pooling/isolation before onboarding many companies.
+
+
+## Hosted verification — 6 October 2026
+
+The Vercel preview and production deployment use PostgreSQL. Production smoke checks passed for both administrator and agent login, seven template boards, health/readiness, summary queries, deferred AI/calling flags and authorization (agents receive 403 for automation management). The original 72 demo leads remained; user1 sees six assigned leads.
+
+Browser checks verified a synthetic recovery case, a 250 INR ledger entry against a 1,000 INR original balance, and matching 750 INR pending totals in Insights. A narrowly scoped automation added a comment automatically using Vercel background execution; its run was recorded as Success and the verification rule was paused afterward. The clearly named verification records remain demo data. The local unit/integration suite passed 32 tests and the production build completed successfully.
