@@ -53,9 +53,14 @@ This release implements the core platform from the supplied 75-section brief; it
 - Subscription billing, a separate platform-admin console, retention/deletion policies and enterprise performance/compliance certification remain work items. No certified enterprise or million-record claim is made.
 - Namespace caches currently have no eviction, transactions serialize writes, and per-organization pools are bounded at four connections. Load-test and revise pooling/isolation before onboarding many companies.
 
-
 ## Hosted verification — 6 October 2026
 
 The Vercel preview and production deployment use PostgreSQL. Production smoke checks passed for both administrator and agent login, seven template boards, health/readiness, summary queries, deferred AI/calling flags and authorization (agents receive 403 for automation management). The original 72 demo leads remained; user1 sees six assigned leads.
 
 Browser checks verified a synthetic recovery case, a 250 INR ledger entry against a 1,000 INR original balance, and matching 750 INR pending totals in Insights. A narrowly scoped automation added a comment automatically using Vercel background execution; its run was recorded as Success and the verification rule was paused afterward. The clearly named verification records remain demo data. The local unit/integration suite passed 32 tests and the production build completed successfully.
+
+## Demo dashboard and conversations
+
+The main Dashboard now presents an explicitly labeled sample workspace: pipeline cards, revenue and source charts, follow-up checkboxes, a quick-create demo opportunity and a four-step CRM walkthrough. Demo deal edits last for the current visit. Actual lead reports and database-backed CRM boards remain separate, clearly linked destinations.
+
+Conversations contains seeded team channels, direct messages and customer inbox examples. Search/filter, unread counts, pin/archive/restore, resolve/reopen, assignee selection, quick replies, emoji, internal notes and new demo conversations are interactive. Replies and attachment metadata are stored only in this browser, scoped to the signed-in user ID. No file content is uploaded and no message is delivered to teammates, WhatsApp, email or website customers. Cross-device delivery, real-time chat services and channel-provider connections are not implemented in this hardcoded demo.

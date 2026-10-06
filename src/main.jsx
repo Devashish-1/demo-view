@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, createContext, useContext, useCallb
 import { createRoot } from 'react-dom/client';
 import { callbackPreset } from './time.js';
 import Platform from './platform/Platform.jsx';
+import DemoDashboard from './platform/DemoDashboard.jsx';
+import DemoChat from './platform/DemoChat.jsx';
 import {
   ArrowUpRight,
   ArrowDownToLine,
@@ -455,8 +457,9 @@ const navigation = [
   {
     group: 'WORKSPACE',
     items: [
-      ['dashboard', 'Overview', LayoutDashboard],
-      ['platform', 'CRM & boards', BriefcaseBusiness],
+      ['dashboard', 'Dashboard', LayoutDashboard],
+      ['chat', 'Conversations', MessageSquare],
+      ['boards', 'CRM & boards', BriefcaseBusiness],
       ['leads', 'All leads', Layers3],
       ['workspace', 'My workspace', Headphones],
       ['callbacks', 'Callbacks', CalendarDays],
@@ -752,10 +755,23 @@ function App() {
                 </button>
               </div>
             )}
-            {page === 'platform' ? (
-              <Platform api={api} user={user} notify={notify} />
+            {page === 'platform' || page === 'boards' ? (
+              <Platform
+                key={page}
+                initial={page === 'boards' ? 'boards' : 'dashboard'}
+                api={api}
+                user={user}
+                notify={notify}
+              />
+            ) : page === 'chat' ? (
+              <DemoChat key={user.id} user={user} />
             ) : page === 'dashboard' ? (
-              <Dashboard />
+              <DemoDashboard
+                user={user}
+                onBoards={() => navigate('boards')}
+                onChat={() => navigate('chat')}
+                onReports={() => navigate('reports')}
+              />
             ) : page === 'leads' ? (
               <Leads />
             ) : page === 'workspace' ? (

@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Board from './Board.jsx';
+import DemoDashboard from './DemoDashboard.jsx';
+import DemoChat from './DemoChat.jsx';
 import { RecordDetail } from './Record.jsx';
 import { ActionForm, Dialog, Field, parse, money } from './components.jsx';
 import './platform.css';
 
-export default function Platform({ api: baseApi, user, notify, initial = 'boards' }) {
+export default function Platform({ api: baseApi, user, notify, initial = 'dashboard' }) {
   const api = useCallback((path, options) => baseApi('/platform' + path, options), [baseApi]);
   const [boot, setBoot] = useState(null),
     [error, setError] = useState(''),
@@ -74,9 +76,11 @@ export default function Platform({ api: baseApi, user, notify, initial = 'boards
         </div>
         <div className="p-tabs">
           {[
-            ['boards', 'CRM & boards'],
+            ['dashboard', 'Dashboard'],
+            ['boards', 'CRM boards'],
+            ['chat', 'Conversations'],
             ['insights', 'Insights'],
-            ['notifications', 'Inbox'],
+            ['notifications', 'Notifications'],
             ...(manager ? [['automations', 'Automations']] : []),
             ['settings', 'Workspace settings'],
           ].map(([key, label]) => (
@@ -92,6 +96,17 @@ export default function Platform({ api: baseApi, user, notify, initial = 'boards
           {error}
         </p>
       )}
+      {area === 'dashboard' && (
+        <DemoDashboard
+          user={user}
+          onBoards={() => setArea('boards')}
+          onChat={() => setArea('chat')}
+          onReports={() => {
+            window.location.hash = 'reports';
+          }}
+        />
+      )}
+      {area === 'chat' && <DemoChat key={user.id} user={user} />}
       {area === 'boards' && (
         <>
           <div className="p-board-nav">
